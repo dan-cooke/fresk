@@ -33,17 +33,23 @@ type CassetteApiData =
   | { color: string }
   | { brand: string };
 
-export type GetAllCassettesResponse = Record<string, CassetteApiData[]>;
+export type GetAllCassettesResponse = Record<string, CassetteApiData[]>[];
 
 export const getAllCassettes = async (): Promise<Cassette[]> => {
   // This is the root endpoint of the api
   const { data } = await axiosClient.get<GetAllCassettesResponse>("/");
 
   // this API returns a very strange structure, so lets map it to something more useful
-  const cassettes = Object.entries(data).map(([id, properties]) => ({
-    id,
-    ...properties.reduce((acc, property) => ({ ...acc, ...property }), {}),
-  }));
+  const cassettes = data.map((cassette) => {
+    const [id, properties] = Object.entries(cassette)[0];
+    const cassetteData = properties.reduce((acc, property) => {
+      return { ...acc, ...property };
+    }, {} as Cassette);
+    return {
+      ...cassetteData,
+      id,
+    };
+  });
 
   return cassettes;
 };
