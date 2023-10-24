@@ -54,5 +54,5 @@ export const getAllCassettes = async (): Promise<Cassette[]> => {
   });
 
   // sort by brand name
-  return cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)).slice(0, 5);
+  return cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)).slice(0, 20);
 };
