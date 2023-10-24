@@ -17,6 +17,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
     "@types/node": "^20",
