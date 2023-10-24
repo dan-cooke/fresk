@@ -1,5 +1,5 @@
 import { Cassette } from "@/app/types";
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 
 const { API_KEY, API_URL } = process.env;
 
@@ -35,12 +35,14 @@ type CassetteApiData =
 
 export type GetAllCassettesResponse = Record<string, CassetteApiData[]>[];
 
+export const revalidate = 3600;
+
 export const getAllCassettes = async (): Promise<Cassette[]> => {
   // This is the root endpoint of the api
   const { data } = await axiosClient.get<GetAllCassettesResponse>("/");
 
   // this API returns a very strange structure, so lets map it to something more useful
-  const cassettes = data.map((cassette) => {
+  const cassettes: Cassette[] = data.map((cassette) => {
     const [id, properties] = Object.entries(cassette)[0];
     const cassetteData = properties.reduce((acc, property) => {
       return { ...acc, ...property };
@@ -48,8 +50,9 @@ export const getAllCassettes = async (): Promise<Cassette[]> => {
     return {
       ...cassetteData,
       id,
-    };
+    } as Cassette;
   });
 
-  return cassettes;
+  // sort by brand name
+  return cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)).slice(0, 5);
 };
