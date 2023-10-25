@@ -8,12 +8,12 @@ export type FilterOptions = {
   types: string[];
 };
 
-export const getFilterOptions = (cassettes: Cassette[]) => {
+export const getFilterOptions = (cassettes: Cassette[]): FilterOptions => {
   const filterSets = {
-    brands: new Set(),
-    colors: new Set(),
-    playingTimes: new Set(),
-    types: new Set(),
+    brands: new Set<string>(),
+    colors: new Set<string>(),
+    playingTimes: new Set<string>(),
+    types: new Set<string>(),
   };
 
   cassettes.forEach((cassette) => {
@@ -32,10 +32,14 @@ export const getFilterOptions = (cassettes: Cassette[]) => {
   });
 
   return {
-    brands: Array.from(filterSets.brands),
-    colors: Array.from(filterSets.colors),
-    playingTimes: Array.from(filterSets.playingTimes),
-    types: Array.from(filterSets.types),
+    brands: Array.from(filterSets.brands).sort((a, b) => a.localeCompare(b)),
+
+    colors: Array.from(filterSets.colors).sort((a, b) => a.localeCompare(b)),
+    playingTimes: Array.from(filterSets.playingTimes).sort((a, b) =>
+      a.localeCompare(b),
+    ),
+
+    types: Array.from(filterSets.types).sort((a, b) => a.localeCompare(b)),
   };
 };
 

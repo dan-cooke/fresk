@@ -1,5 +1,5 @@
 import { Cassette } from "@/app/types";
-import { filterCassettes } from "./filters";
+import { FilterOptions, filterCassettes, getFilterOptions } from "./filters";
 
 const { API_KEY, API_URL } = process.env;
 
@@ -65,7 +65,11 @@ export type GetAllCassettesOptions = {
 
 export const getAllCassettes = async (
   options: GetAllCassettesOptions = {},
-): Promise<{ cassettes: Cassette[]; totalResults: number }> => {
+): Promise<{
+  cassettes: Cassette[];
+  totalResults: number;
+  availableFilters: FilterOptions;
+}> => {
   const t = Date.now();
   // This is the root endpoint of the api
   const data = await baseFetch<GetAllCassettesResponse>("/");
@@ -87,12 +91,18 @@ export const getAllCassettes = async (
     } as Cassette;
   });
 
-  // sort by brand name
+  // we have to build the available filters in this function
+  // its not ideal, this function is doing a lot
+  // but ideally this would just all be done on the backend with
+  // some kind of facetted query
+  const availableFilters = getFilterOptions(cassettes);
+
   return {
     cassettes: filterCassettes(
       cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)),
       options.filters,
     ).slice(page * pageSize, page * pageSize + pageSize),
     totalResults: cassettes.length,
+    availableFilters,
   };
 };
