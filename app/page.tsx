@@ -24,6 +24,7 @@ export default async function Home({ searchParams }: HomeProps) {
     },
   });
 
+  console.log(availableFilters);
   return (
     <main>
       <h1 className="font-black text-3xl xl:text-5xl">freskdesk.audio</h1>

@@ -91,17 +91,23 @@ export const getAllCassettes = async (
     } as Cassette;
   });
 
+  const filteredCassettes = filterCassettes(cassettes, options.filters);
+
+  const sortedCassettes = filteredCassettes.sort(
+    (a, b) => a.brand?.localeCompare(b.brand),
+  );
+
   // we have to build the available filters in this function
   // its not ideal, this function is doing a lot
   // but ideally this would just all be done on the backend with
   // some kind of facetted query
-  const availableFilters = getFilterOptions(cassettes);
+  const availableFilters = getFilterOptions(filteredCassettes);
 
   return {
-    cassettes: filterCassettes(
-      cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)),
-      options.filters,
-    ).slice(page * pageSize, page * pageSize + pageSize),
+    cassettes: sortedCassettes.slice(
+      page * pageSize,
+      page * pageSize + pageSize,
+    ),
     totalResults: cassettes.length,
     availableFilters,
   };
