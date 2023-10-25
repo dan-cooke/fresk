@@ -29,7 +29,7 @@ export function Select({
       <Listbox
         name="option"
         as="div"
-        defaultValue={defaultValue}
+        value={defaultValue}
         className="relative"
         onChange={onChange}
       >
@@ -44,6 +44,14 @@ export function Select({
         >
           {defaultValue || "All"}
         </Listbox.Button>
+        {defaultValue ? (
+          <button
+            className={clsx("absolute  top-1/2 -translate-y-1/2", "right-4")}
+            onClick={onClear}
+          >
+            <IoClose />
+          </button>
+        ) : null}
         <Transition
           as={Fragment}
           leave="transition ease-in duration-100"
