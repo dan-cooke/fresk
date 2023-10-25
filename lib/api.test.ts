@@ -104,14 +104,18 @@ describe("API", () => {
       });
 
       it("should be able to filter by brand name", async () => {
-        const { cassettes } = await getAllCassettes({ brand: "Apple" });
+        const { cassettes } = await getAllCassettes({
+          filters: { brand: "Apple" },
+        });
 
         expect(cassettes.length).toEqual(2);
         expect(cassettes[0].brand).toEqual("Apple");
         expect(cassettes[1].brand).toEqual("Apple");
       });
       it("should be able to filter by color ", async () => {
-        const { cassettes } = await getAllCassettes({ color: "Chrome" });
+        const { cassettes } = await getAllCassettes({
+          filters: { color: "Chrome" },
+        });
 
         expect(cassettes.length).toEqual(2);
         expect(cassettes[0].color).toEqual("Chrome");
@@ -119,14 +123,18 @@ describe("API", () => {
       });
 
       it("should be able to filter by type ", async () => {
-        const { cassettes } = await getAllCassettes({ type: "World" });
+        const { cassettes } = await getAllCassettes({
+          filters: { type: "World" },
+        });
 
         expect(cassettes.length).toEqual(1);
         expect(cassettes[0].type).toEqual("World");
       });
       it("should be able to filter by playingTime ", async () => {
         const { cassettes } = await getAllCassettes({
-          playingTime: "60 minutes",
+          filters: {
+            playingTime: "60 minutes",
+          },
         });
 
         expect(cassettes.length).toEqual(1);
@@ -134,8 +142,10 @@ describe("API", () => {
       });
       it("should be able to combine categories using an AND relationship", async () => {
         const { cassettes } = await getAllCassettes({
-          color: "Chrome",
-          brand: "Apple",
+          filters: {
+            color: "Chrome",
+            brand: "Apple",
+          },
         });
 
         expect(cassettes.length).toEqual(1);
@@ -144,9 +154,11 @@ describe("API", () => {
       });
 
       it("should support pagination", async () => {
-        const { cassettes } = await getAllCassettes(undefined, {
-          page: 0,
-          pageSize: 1,
+        const { cassettes } = await getAllCassettes({
+          pagination: {
+            page: 0,
+            pageSize: 1,
+          },
         });
         expect(cassettes.length).toEqual(1);
       });

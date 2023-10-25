@@ -1,5 +1,5 @@
 import { Cassette } from "@/app/types";
-import { GetAllCassettesFilters } from "./api";
+import { GetAllCassettesFilters, GetAllCassettesOptions } from "./api";
 
 export type FilterOptions = {
   brands: string[];
