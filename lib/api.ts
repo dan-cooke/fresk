@@ -54,10 +54,15 @@ export type GetAllCassettesFilters = {
   playingTime?: string;
   type?: string;
 };
+export type GetAllCassettesPage = {
+  page?: number;
+  pageSize?: number;
+};
 
 export const getAllCassettes = async (
   filters?: GetAllCassettesFilters,
-): Promise<Cassette[]> => {
+  page?: GetAllCassettesPage,
+): Promise<{ cassettes: Cassette[]; totalResults: number }> => {
   const t = Date.now();
   // This is the root endpoint of the api
   const data = await baseFetch<GetAllCassettesResponse>("/");
@@ -77,8 +82,11 @@ export const getAllCassettes = async (
   });
 
   // sort by brand name
-  return filterCassettes(
-    cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)).slice(0, 20),
-    filters,
-  );
+  return {
+    cassettes: filterCassettes(
+      cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)),
+      filters,
+    ).slice(page?.page || 0, page?.pageSize || 20),
+    totalResults: cassettes.length,
+  };
 };
