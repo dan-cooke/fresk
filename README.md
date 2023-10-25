@@ -31,7 +31,7 @@ npm run test
 2. End to end testing - I have been trying to install Cypress here for the last hour - but its just taking far too long on my current network connection. This would be a no-brainer improvement, adding them into the CI on every push, before we deploy. This would also allow us to test the more fiddly UI business logic.
 
 
-### Known bugs
+### Known bugs
 1. There is a flash of "incorrect" content when you apply a filter, it takes a minute for the new image to load - so it continues to show the old image
 
 2. When you deselect a filter its value is not deslected in the dropdown.
