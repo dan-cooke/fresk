@@ -2,28 +2,34 @@ import { useMemo } from "react";
 import Image from "next/image";
 import type { Cassette } from "../types";
 import clsx from "clsx";
+import { TagRow } from "./tag-row";
 
 export type CassetteCardProps = {
   cassette: Cassette;
 };
 export function CassetteCard({ cassette }: CassetteCardProps) {
   const displayName = useMemo(() => {
-    return `${cassette.brand} ${cassette.type}`;
+    return `${cassette.brand} ${cassette.type || ""}`;
   }, [cassette]);
 
   return (
     <div
       className={clsx(
-        "flex flex-col",
-        "bg-neutral-1-light dark:bg-neutral-2-dark",
-        "drop-shadow-md",
+        "flex flex-col gap-4 mt-16 pb-8",
+        "border-b border-b-text-disabled-light",
+        "dark:border-b-text-disabled-dark",
       )}
     >
-      <div className="w-48 h-48 rounded-xl relative">
-        <Image src={cassette.img} alt={displayName} fill />
+      <div className="w-full h-32 rounded-t-xl relative place-self-center">
+        <Image
+          src={cassette.img}
+          alt={displayName}
+          fill
+          className="rounded-xl object-contain"
+        />
       </div>
-      <h2 className="text-xl font-bold">{displayName}</h2>
-      <p className="text-gray-500">{cassette.id}</p>
+      <h2 className="text-xl">{displayName}</h2>
+      <TagRow tags={[cassette.color, cassette.type]} />
     </div>
   );
 }

@@ -26,7 +26,7 @@ export default async function RootLayout({
           inter.className,
           "bg-bg-light text-text-primary-light",
           "dark:bg-bg-dark dark:text-text-primary-dark",
-          "max-w-xs md:max-w-2xl lg:max-w-4xl ml-auto mr-auto print:max-w-none",
+          "max-w-full md:max-w-2xl lg:max-w-4xl ml-auto mr-auto print:max-w-none",
         )}
       >
         <ThemeToggle theme={theme} />
