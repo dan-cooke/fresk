@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import Image from "next/image";
 import type { Cassette } from "../types";
 import clsx from "clsx";
 
@@ -18,11 +19,9 @@ export function CassetteCard({ cassette }: CassetteCardProps) {
         "drop-shadow-md",
       )}
     >
-      <img
-        src={cassette.img}
-        alt={displayName}
-        className="w-48 h-48 rounded-xl"
-      />
+      <div className="w-48 h-48 rounded-xl relative">
+        <Image src={cassette.img} alt={displayName} fill />
+      </div>
       <h2 className="text-xl font-bold">{displayName}</h2>
       <p className="text-gray-500">{cassette.id}</p>
     </div>
