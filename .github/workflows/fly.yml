@@ -58,8 +58,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only --build-secret API_URL=$API_URL --build-secret API_KEY=$API_KEY
+      - name: Create .env.local for some reason next requires this
+        run: |
+          echo API_KEY=${{ secrets.API_KEY }} >> .env.local
+          echo API_URL=${{ secrets.API_URL }} >> .env.local
+
+      - run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          API_URL: ${{ secrets.API_URL }}
-          API_KEY: ${{ secrets.API_KEY }}
