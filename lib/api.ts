@@ -1,4 +1,5 @@
 import { Cassette } from "@/app/types";
+import { filterCassettes } from "./filters";
 
 const { API_KEY, API_URL } = process.env;
 
@@ -80,19 +81,4 @@ export const getAllCassettes = async (
     cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)).slice(0, 20),
     filters,
   );
-};
-
-const filterCassettes = (
-  cassettes: Cassette[],
-  filters?: GetAllCassettesFilters,
-) => {
-  if (!filters) {
-    return cassettes;
-  }
-
-  return cassettes.filter((cassette) => {
-    return Object.entries(filters).every(([key, value]) => {
-      return cassette[key as keyof Cassette] === value;
-    });
-  });
 };
