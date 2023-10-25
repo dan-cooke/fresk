@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## fresk.digital assignemnt
 
-## Getting Started
+This repo is a small assignment I was handed by an employer as a kind of test. It is a basic CRUD application that pulls data from a public API and displays it in the browser.
 
-First, run the development server:
+### Overview
 
-```bash
+I chose to use NextJS 13 App Router for this project, even though I have barely used it - risky choice. But I loved the developer experience. My rationale for this choice was Next allows us to server render everything, so we can fully utilise our deployment hardware and take the load of our users devices.
+
+### Development
+
+```
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Deploying
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project is hosted on [fly.io](https://fly.io/) and is automaticalyl deployed to my personal account on every push
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Testing
 
-## Learn More
+Currently the project only has unit tests, I wanted to add Cypress e2e tests as well but In the interest of time I just decided to leave it here. You can run the unit tests wth
 
-To learn more about Next.js, take a look at the following resources:
+```
+npm run test
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Future improvements
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. The API fails ocassionally to test my ability to handle errors, I decided to just inform the user that something has went wrong and let them retry the action manually. A better solution would be to bring a caching middleware in like Redis, and our API would first check Redis for results, disply them and then revalidate by hitting the upstream API, updating the redis cache if successful, and using a retry mechanism if failed. This would hide the API errors from our users - especcially as this data is quite static, we can safely cache it for a long time.
 
-## Deploy on Vercel
+2. End to end testing - I have been trying to install Cypress here for the last hour - but its just taking far too long on my current network connection. This would be a no-brainer improvement, adding them into the CI on every push, before we deploy. This would also allow us to test the more fiddly UI business logic.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Pagination in the UI - pagination is currently supported in our NextJS API via `page` and `pageSize` params, but I did not create any UI for this, in the interest of time. I decided to limit results to only 20 cassettes for the time being to improve render speed.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Image placeholders - it would be nice to have some kind of loading placeholder we can display when we have not yet fetched the cassette images from the upstream API.

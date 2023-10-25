@@ -2,7 +2,7 @@
 import { Listbox, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { Fragment } from "react";
-import { IoCheckmark, IoClose, IoExit } from "react-icons/io5";
+import { IoCheckmark, IoClose } from "react-icons/io5";
 
 export function Select({
   options,
@@ -10,7 +10,9 @@ export function Select({
   onChange,
   label,
   onClear,
+  id,
 }: {
+  id: string;
   options: any[];
   defaultValue?: string;
   onChange?: (option: any) => void;
@@ -25,7 +27,7 @@ export function Select({
         "text-sm",
       )}
     >
-      <label>{label}</label>
+      <label htmlFor={id}>{label}</label>
       <Listbox
         name="option"
         as="div"
@@ -34,6 +36,7 @@ export function Select({
         onChange={onChange}
       >
         <Listbox.Button
+          id={id}
           className={clsx(
             "bg-neutral-1-light dark:bg-neutral-1-dark relative",
             "p-2 px-4 w-32",

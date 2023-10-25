@@ -32,6 +32,7 @@ export function Filters({ availableFilters, searchParams }: FiltersProps) {
     <div className="flex mt-8 gap-8">
       <Select
         options={availableFilters.brands}
+        id="brand"
         label="Brand"
         defaultValue={searchParams?.brand}
         onChange={(brand) => handleFilter("brand", brand)}
@@ -40,12 +41,14 @@ export function Filters({ availableFilters, searchParams }: FiltersProps) {
       <Select
         options={availableFilters.colors}
         label="Color"
+        id="color"
         defaultValue={searchParams?.color}
         onChange={(color) => handleFilter("color", color)}
         onClear={() => clearValuesForFilter("color")}
       />
       <Select
         options={availableFilters.types}
+        id="type"
         label="Type"
         defaultValue={searchParams?.type}
         onChange={(type) => handleFilter("type", type)}
@@ -53,6 +56,7 @@ export function Filters({ availableFilters, searchParams }: FiltersProps) {
       />
       <Select
         options={availableFilters.playingTimes}
+        id="playingTime"
         label="Playing Time"
         defaultValue={searchParams?.playingTime}
         onChange={(playingTime) => handleFilter("playingTime", playingTime)}
