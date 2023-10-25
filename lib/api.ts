@@ -47,12 +47,21 @@ type CassetteApiData =
 
 export type GetAllCassettesResponse = Record<string, CassetteApiData[]>[];
 
-export const getAllCassettes = async (): Promise<Cassette[]> => {
+export type GetAllCassettesFilters = {
+  brand?: string;
+  color?: string;
+  playingTime?: string;
+  type?: string;
+};
+
+export const getAllCassettes = async (
+  filters?: GetAllCassettesFilters,
+): Promise<Cassette[]> => {
   const t = Date.now();
   // This is the root endpoint of the api
   const data = await baseFetch<GetAllCassettesResponse>("/");
 
-  console.log("API call took", Date.now() - t, "ms");
+  console.info("API call took", Date.now() - t, "ms");
 
   // this API returns a very strange structure, so lets map it to something more useful
   const cassettes: Cassette[] = data.map((cassette) => {
@@ -67,5 +76,23 @@ export const getAllCassettes = async (): Promise<Cassette[]> => {
   });
 
   // sort by brand name
-  return cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)).slice(0, 20);
+  return filterCassettes(
+    cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)).slice(0, 20),
+    filters,
+  );
+};
+
+const filterCassettes = (
+  cassettes: Cassette[],
+  filters?: GetAllCassettesFilters,
+) => {
+  if (!filters) {
+    return cassettes;
+  }
+
+  return cassettes.filter((cassette) => {
+    return Object.entries(filters).every(([key, value]) => {
+      return cassette[key as keyof Cassette] === value;
+    });
+  });
 };
