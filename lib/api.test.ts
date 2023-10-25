@@ -1,4 +1,3 @@
-import { Cassette } from "@/app/types";
 import { GetAllCassettesResponse, getAllCassettes } from "./api";
 
 global.fetch = jest.fn();
@@ -59,7 +58,7 @@ describe("API", () => {
       });
 
       it("should map the API response to a consumable format", async () => {
-        const cassettes = await getAllCassettes();
+        const { cassettes } = await getAllCassettes();
 
         expect(cassettes).toMatchInlineSnapshot(`
 [
@@ -98,21 +97,21 @@ describe("API", () => {
       });
 
       it("should sort the cassettes by brand name", async () => {
-        const cassettes = await getAllCassettes();
+        const { cassettes } = await getAllCassettes();
         expect(cassettes[0].brand).toEqual("Apple");
         expect(cassettes[1].brand).toEqual("Apple");
         expect(cassettes[2].brand).toEqual("Sony");
       });
 
       it("should be able to filter by brand name", async () => {
-        const cassettes = await getAllCassettes({ brand: "Apple" });
+        const { cassettes } = await getAllCassettes({ brand: "Apple" });
 
         expect(cassettes.length).toEqual(2);
         expect(cassettes[0].brand).toEqual("Apple");
         expect(cassettes[1].brand).toEqual("Apple");
       });
       it("should be able to filter by color ", async () => {
-        const cassettes = await getAllCassettes({ color: "Chrome" });
+        const { cassettes } = await getAllCassettes({ color: "Chrome" });
 
         expect(cassettes.length).toEqual(2);
         expect(cassettes[0].color).toEqual("Chrome");
@@ -120,19 +119,21 @@ describe("API", () => {
       });
 
       it("should be able to filter by type ", async () => {
-        const cassettes = await getAllCassettes({ type: "World" });
+        const { cassettes } = await getAllCassettes({ type: "World" });
 
         expect(cassettes.length).toEqual(1);
         expect(cassettes[0].type).toEqual("World");
       });
       it("should be able to filter by playingTime ", async () => {
-        const cassettes = await getAllCassettes({ playingTime: "60 minutes" });
+        const { cassettes } = await getAllCassettes({
+          playingTime: "60 minutes",
+        });
 
         expect(cassettes.length).toEqual(1);
         expect(cassettes[0].playingTime).toEqual("60 minutes");
       });
       it("should be able to combine categories using an AND relationship", async () => {
-        const cassettes = await getAllCassettes({
+        const { cassettes } = await getAllCassettes({
           color: "Chrome",
           brand: "Apple",
         });
@@ -140,6 +141,14 @@ describe("API", () => {
         expect(cassettes.length).toEqual(1);
         expect(cassettes[0].color).toEqual("Chrome");
         expect(cassettes[0].brand).toEqual("Apple");
+      });
+
+      it("should support pagination", async () => {
+        const { cassettes } = await getAllCassettes(undefined, {
+          page: 0,
+          pageSize: 1,
+        });
+        expect(cassettes.length).toEqual(1);
       });
     });
   });
