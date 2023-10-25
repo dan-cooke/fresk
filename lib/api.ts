@@ -70,6 +70,9 @@ export const getAllCassettes = async (
   // This is the root endpoint of the api
   const data = await baseFetch<GetAllCassettesResponse>("/");
 
+  const page = options.pagination?.page || 0;
+  const pageSize = options.pagination?.pageSize || 20;
+
   console.info("API call took", Date.now() - t, "ms");
 
   // this API returns a very strange structure, so lets map it to something more useful
@@ -89,10 +92,7 @@ export const getAllCassettes = async (
     cassettes: filterCassettes(
       cassettes.sort((a, b) => a.brand?.localeCompare(b.brand)),
       options.filters,
-    ).slice(
-      options?.pagination?.page || 0,
-      options?.pagination?.pageSize || 20,
-    ),
+    ).slice(page * pageSize, page * pageSize + pageSize),
     totalResults: cassettes.length,
   };
 };

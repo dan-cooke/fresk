@@ -1,10 +1,28 @@
-import { getAllCassettes } from "@/lib/api";
+import {
+  GetAllCassettesFilters,
+  GetAllCassettesPage,
+  getAllCassettes,
+} from "@/lib/api";
 import { CassetteCard } from "./components/cassette-card";
 import clsx from "clsx";
 
-export const revalidate = 3600;
-export default async function Home() {
-  const cassetes = await getAllCassettes();
+type HomeProps = {
+  searchParams?: GetAllCassettesFilters & GetAllCassettesPage;
+};
+export default async function Home({ searchParams }: HomeProps) {
+  const { cassettes, totalResults } = await getAllCassettes({
+    filters: {
+      brand: searchParams?.brand,
+      type: searchParams?.type,
+      color: searchParams?.color,
+      playingTime: searchParams?.playingTime,
+    },
+    pagination: {
+      page: searchParams?.page,
+      pageSize: searchParams?.pageSize,
+    },
+  });
+
   return (
     <main>
       <h1 className="font-black text-3xl xl:text-5xl">freskdesk.audio</h1>
@@ -12,7 +30,7 @@ export default async function Home() {
         Your one stop shop for all things audio cassettes
       </h2>
       <div className={clsx("grid grid-cols-4 gap-8 mt-16")}>
-        {cassetes.map((cassette) => (
+        {cassettes.map((cassette) => (
           <CassetteCard key={cassette.id} cassette={cassette} />
         ))}
       </div>

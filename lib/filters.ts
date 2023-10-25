@@ -1,5 +1,5 @@
 import { Cassette } from "@/app/types";
-import { GetAllCassettesFilters, GetAllCassettesOptions } from "./api";
+import { GetAllCassettesFilters } from "./api";
 
 export type FilterOptions = {
   brands: string[];
@@ -46,10 +46,19 @@ export const filterCassettes = (
   if (!filters) {
     return cassettes;
   }
-
   return cassettes.filter((cassette) => {
-    return Object.entries(filters).every(([key, value]) => {
-      return cassette[key as keyof Cassette] === value;
-    });
+    if (filters.brand && cassette.brand !== filters.brand) {
+      return false;
+    }
+    if (filters.color && cassette.color !== filters.color) {
+      return false;
+    }
+    if (filters.playingTime && cassette.playingTime !== filters.playingTime) {
+      return false;
+    }
+    if (filters.type && cassette.type !== filters.type) {
+      return false;
+    }
+    return true;
   });
 };
