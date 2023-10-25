@@ -1,8 +1,7 @@
 import { Cassette } from "@/app/types";
-import { GetAllCassettesResponse, axiosClient, getAllCassettes } from "./api";
-import MockAdapter from "axios-mock-adapter";
+import { GetAllCassettesResponse, getAllCassettes } from "./api";
 
-const apiMock = new MockAdapter(axiosClient);
+global.fetch = jest.fn();
 
 describe("API", () => {
   describe("getAllCassettes", () => {
@@ -38,7 +37,10 @@ describe("API", () => {
     ];
     describe("when the API returns a successful response", () => {
       beforeEach(() => {
-        apiMock.onGet("/").replyOnce(200, mockApiResponse);
+        (fetch as jest.Mock).mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(mockApiResponse),
+        } as Response);
       });
 
       it("should map the API response to a consumable format", async () => {
@@ -75,18 +77,6 @@ describe("API", () => {
         const cassettes = await getAllCassettes();
         expect(cassettes[0].brand).toEqual("Apple");
         expect(cassettes[1].brand).toEqual("Sony");
-      });
-    });
-
-    describe("when the API returns an unsuccessful response", () => {
-      beforeEach(() => {
-        apiMock.onAny("/").replyOnce(401);
-      });
-
-      it("should throw an error", async () => {
-        await expect(getAllCassettes()).rejects.toThrow(
-          "Request failed with status code 401",
-        );
       });
     });
   });

@@ -1,10 +1,9 @@
 import { Cassette } from "@/app/types";
-import axios from "axios";
 
 const { API_KEY, API_URL } = process.env;
 
 if (!API_KEY) {
-  throw new Error("No API_KEY found in environment");
+  throw new Error("No API_KEY jound in environment");
 }
 if (!API_URL) {
   throw new Error("No API_URL found in environment");
@@ -16,13 +15,26 @@ if (!API_URL) {
  * But will keep this here in case we need to extend in future
  */
 
-export const axiosClient = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-    "x-api-key": API_KEY,
-  },
-});
+export const baseFetch = async <TResponse>(
+  endpoint: string,
+  options: RequestInit = {},
+) => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      ...options?.headers,
+      "x-api-key": API_KEY,
+      "Content-Type": "application/json",
+    },
+    next: {
+      revalidate: 3600,
+    },
+  });
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+  return response.json() as TResponse;
+};
 
 type CassetteApiData =
   | { page: string }
@@ -35,11 +47,12 @@ type CassetteApiData =
 
 export type GetAllCassettesResponse = Record<string, CassetteApiData[]>[];
 
-export const revalidate = 3600;
-
 export const getAllCassettes = async (): Promise<Cassette[]> => {
+  const t = Date.now();
   // This is the root endpoint of the api
-  const { data } = await axiosClient.get<GetAllCassettesResponse>("/");
+  const data = await baseFetch<GetAllCassettesResponse>("/");
+
+  console.log("API call took", Date.now() - t, "ms");
 
   // this API returns a very strange structure, so lets map it to something more useful
   const cassettes: Cassette[] = data.map((cassette) => {
