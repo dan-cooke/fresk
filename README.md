@@ -30,6 +30,13 @@ npm run test
 
 2. End to end testing - I have been trying to install Cypress here for the last hour - but its just taking far too long on my current network connection. This would be a no-brainer improvement, adding them into the CI on every push, before we deploy. This would also allow us to test the more fiddly UI business logic.
 
+
 3. Pagination in the UI - pagination is currently supported in our NextJS API via `page` and `pageSize` params, but I did not create any UI for this, in the interest of time. I decided to limit results to only 20 cassettes for the time being to improve render speed.
 
 4. Image placeholders - it would be nice to have some kind of loading placeholder we can display when we have not yet fetched the cassette images from the upstream API.
+
+### Known bugs
+1. There is a flash of "incorrect" content when you apply a filter, it takes a minute for the new image to load - so it continues to show the old image
+
+2. When you deselect a filter its value is not deslected in the dropdown.
+
